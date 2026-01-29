@@ -16,19 +16,19 @@ interface CartStore {
   total: () => number;
 }
 
-// 📚 DOCS: Zustand - Create Store
+// DOCS: Zustand - Create Store
 // https://docs.pmnd.rs/zustand/getting-started/introduction
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
 
-  // ✅ FUNCIÓN SUMAR / AGREGAR
+  // FUNCIÓN SUMAR / AGREGAR
   addItem: (product) => {
     set((state) => {
       // 1. Buscamos si el producto ya está en el carrito
       const existingItem = state.items.find((i) => i.id === product.id);
 
       if (existingItem) {
-        // 📚 Lógica JS: Si existe, creamos un nuevo array actualizando solo la cantidad (+1)
+        // Lógica JS: Si existe, creamos un nuevo array actualizando solo la cantidad (+1)
         return {
           items: state.items.map((i) =>
             i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
@@ -41,7 +41,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
     });
   },
 
-  // ✅ FUNCIÓN RESTAR / QUITAR
+  // FUNCIÓN RESTAR / QUITAR
   removeItem: (productId) => {
     set((state) => {
       // 1. Buscamos el item
@@ -59,7 +59,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
       }
 
       // 3. Si la cantidad es 1, lo borramos de la lista (Filter)
-      // 📚 DOCS: MDN Array Filter
+      // DOCS: MDN Array Filter
       // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
       return {
         items: state.items.filter((i) => i.id !== productId),

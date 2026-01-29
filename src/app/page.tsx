@@ -3,7 +3,7 @@ import ProductCard from "@/components/ProductCard";// Importamos nuestras tarjet
 import CartSummary from "@/components/CartSummary";// Importamos el carrito flotante
 import SearchBar from "@/components/SearchBar"; // Importamos el componente nuevo
 
-// 👇 Esto es vital para que el buscador funcione en tiempo real
+// Esto es vital para que el buscador funcione en tiempo real
 export const dynamic = "force-dynamic";
 
 // Definimos qué tipo de datos esperamos recibir
@@ -11,7 +11,7 @@ interface HomeProps {
   searchParams: Promise<{ q?: string }>;
 }
 
-// 👇 Solo puede haber UN "export default function Home"
+// Solo puede haber UN "export default function Home"
 export default async function Home(props: HomeProps) {
   // 1. Leemos los parámetros de búsqueda (ej: ?q=rubia)
   const searchParams = await props.searchParams;
@@ -47,10 +47,10 @@ export default async function Home(props: HomeProps) {
           </p>
         </header>
 		
-        {/* AQUÍ AGREGAMOS EL COMPONENTE BUSCADOR 👇 */}
+        {/* AQUÍ AGREGAMOS EL COMPONENTE BUSCADOR */}
         <SearchBar />
 
-        {/* AQUÍ AGREGAMOS EL COMPONENTE DE PRODUCTOS 👇 */}
+        {/* AQUÍ AGREGAMOS EL COMPONENTE DE PRODUCTOS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {products && products.length > 0 ? (
             products.map((product) => (
@@ -64,7 +64,7 @@ export default async function Home(props: HomeProps) {
         </div>
       </div>
 
-		{/* AQUÍ AGREGAMOS EL COMPONENTE DEL CARRITO 👇 */}	
+		{/* AQUÍ AGREGAMOS EL COMPONENTE DEL CARRITO */}	
 	    <CartSummary />
     </main>
   );

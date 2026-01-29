@@ -1,4 +1,4 @@
-"use client"; // 👈 Indica que este componente corre en el navegador (Client Component)
+"use client"; // Indica que este componente corre en el navegador (Client Component)
 
 // Importamos los hooks necesarios de Next.js y React
 import { useRouter, useSearchParams } from "next/navigation";

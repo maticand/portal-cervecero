@@ -1,4 +1,4 @@
-"use client"; // 👈 Obligatorio porque tiene interactividad (botones)
+"use client"; // Obligatorio porque tiene interactividad (botones)
 
 import { Product } from "@/types"; // Revisa que la ruta sea correcta según tu proyecto
 import { useCartStore } from "@/store/cart";
@@ -8,11 +8,10 @@ interface Props {
 }
 
 export default function ProductCard({ product }: Props) {
-  // 📚 DOCS: Zustand - Using the store
+  // DOCS: Zustand - Using the store
   // Extraemos las funciones y la lista de items del cerebro
   const { addItem, removeItem, items } = useCartStore();
 
-  // 🧠 LÓGICA VISUAL:
   // Buscamos si ESTE producto específico ya está en el carrito
   const cartItem = items.find((item) => item.id === product.id);
   // Si existe, guardamos su cantidad. Si no, es 0.
@@ -21,7 +20,7 @@ export default function ProductCard({ product }: Props) {
   return (
     <div className="bg-slate-900 rounded-lg overflow-hidden shadow-lg border border-slate-800 flex flex-col transition-transform hover:scale-[1.02] duration-300">
       
-      {/* 🖼️ SECCIÓN IMAGEN */}
+      {/* SECCIÓN IMAGEN */}
       <div className="relative h-48 w-full bg-slate-800">
         <img
           src={product.image_url || "https://placehold.co/400x300?text=Sin+Imagen"}
@@ -34,7 +33,7 @@ export default function ProductCard({ product }: Props) {
         </span>
       </div>
 
-      {/* 📝 SECCIÓN INFO */}
+      {/* SECCIÓN INFO */}
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-xl font-bold text-white mb-1">{product.name}</h3>
         
@@ -42,13 +41,13 @@ export default function ProductCard({ product }: Props) {
           {product.description || "Descripción no disponible."}
         </p>
         
-        {/* 💰 PRECIO Y BOTONES */}
+        {/* PRECIO Y BOTONES */}
         <div className="flex justify-between items-center mt-auto pt-4 border-t border-slate-800">
           <span className="text-xl font-bold text-green-400">
             ${product.price}
           </span>
 
-          {/* 👇 RENDERIZADO CONDICIONAL: ¿Botón simple o Controles? */}
+          {/* RENDERIZADO CONDICIONAL: ¿Botón simple o Controles? */}
           {quantity === 0 ? (
             // Opción A: No está en el carrito -> Botón "Agregar"
             <button
