@@ -37,30 +37,45 @@ export default function SearchBar() {
     router.push("/"); // Forzamos la ida al inicio inmediatamente
   };
 
-  return (
-    <div className="form-control w-full max-w-lg mb-8 mx-auto">
-      {/* DAISYUI: 'input input-bordered' crea el input con borde estándar.
-         'flex items-center gap-2' nos permite poner el ícono adentro visualmente.
+return (
+    <div className="w-full max-w-md mx-auto mb-8">
+      {/* CORRECCIÓN DE ALINEACIÓN:
+         1. 'flex': Convierte la caja en una fila flexible.
+         2. 'items-center': Alinea todo verticalmente al centro.
+         3. 'gap-2': Da espacio entre la lupa, el texto y la X.
+         4. 'input input-bordered': Estilos base de DaisyUI.
       */}
-      <label className="input input-bordered input-lg w-full max-w-lg mx-auto">  
+      <label className="input input-bordered flex items-center gap-2 h-12 shadow-sm">
         
-        {/* SVG de Lupa (Iconografía estándar) */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
+        {/* ÍCONO (Izquierda) */}
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          viewBox="0 0 16 16" 
+          fill="currentColor" 
+          className="w-5 h-5 opacity-70 shrink-0" // shrink-0 evita que se aplaste
+        >
+          <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
+        </svg>
         
-        {/* EL INPUT DE TEXTO */} 
+        {/* CAMPO DE TEXTO (Centro) */}
         <input
           type="text"
-          className="grow" // Ocupa todo el espacio disponible
-          placeholder="Buscar Producto..."
+          className="grow bg-transparent outline-none border-none h-full" // 'grow' ocupa todo el espacio sobrante
+          placeholder="Buscar..."
           value={term}
           onChange={(e) => setTerm(e.target.value)}
         />
 
-        {/* Botón de limpiar (Solo aparece si hay texto) */}
+        {/* BOTÓN BORRAR (Derecha) */}
         {term && (
-          // DAISYUI: 'btn-circle' hace un botón perfectamente redondo.
-          <button onClick={clearSearch} className="btn btn-circle btn-ghost btn-xs text-base-content/50 hover:text-error">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          <button 
+            onClick={clearSearch} 
+            className="btn btn-circle btn-ghost btn-xs shrink-0 text-base-content/60 hover:text-error"
+            aria-label="Borrar búsqueda"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         )}
       </label>

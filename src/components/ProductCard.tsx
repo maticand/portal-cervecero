@@ -32,8 +32,8 @@ export default function ProductCard({ product }: Props) {
           className="w-full h-full object-cover"
         />
         {/* Etiqueta de Categoría (Genérica) */}
-        {/* DAISYUI: 'badge' crea la etiqueta redondeada. 'badge-secondary' le da el color rosado/secundario del tema. */}
-        <div className="badge absolute top-2 right-2 font-bold">
+        {/* DAISYUI: 'badge' crea la etiqueta redondeada. 'badge-warning' le da el color amarillo. */}
+        <div className="badge badge-warning p-3 rounded-badge absolute top-2 right-2 font-bold">
           {product.categories?.name || "Sin Categoria"}
         </div>
       </figure>
@@ -90,7 +90,7 @@ export default function ProductCard({ product }: Props) {
               {/* Botón Sumar */}
               <button
                 onClick={() => addItem(product)}
-                className="btn btn-ghost btn-warning btn-md join-item font-bold text-lg shadow-none"
+                className="btn btn-ghost btn-md join-item font-bold text-lg shadow-none"
               >
                 +
               </button>
