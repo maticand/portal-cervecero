@@ -36,7 +36,7 @@ export default async function Home(props: HomeProps) {
   const { data: products } = await supabaseQuery;
 
   return (
-    <main className="min-h-screen bg-slate-950 p-8 pb-32">
+    <main className="min-h-screen p-8 pb-32">
       <div className="max-w-4xl mx-auto">
         <header className="mb-12 text-center">
           <h1 className="text-5xl font-bold text-yellow-500 mb-4">
@@ -51,7 +51,7 @@ export default async function Home(props: HomeProps) {
         <SearchBar />
 
         {/* AQUÍ AGREGAMOS EL COMPONENTE DE PRODUCTOS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {products && products.length > 0 ? (
             products.map((product) => (
               <ProductCard key={product.id} product={product} />

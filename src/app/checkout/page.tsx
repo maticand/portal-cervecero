@@ -28,14 +28,15 @@ export default function CheckoutPage() {
   // Si el usuario entra aquí directamente sin productos, lo mandamos al inicio.
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
-        <h2 className="text-2xl font-bold text-white mb-4">Tu carrito está vacío 🛒</h2>
-        <Link 
-          href="/" 
-          className="bg-yellow-500 text-black font-bold py-2 px-6 rounded-full hover:bg-yellow-400 transition"
-        >
-          Volver al Catálogo
-        </Link>
+      // DAISYUI: Componente 'Hero' para pantallas completas de aviso
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content text-center">
+          <div className="max-w-md">
+            <h1 className="text-5xl font-bold">🛒 Carrito Vacío</h1>
+            <p className="py-6">Parece que aún no has elegido nada.</p>
+            <Link href="/" className="btn btn-primary">Volver al Catálogo</Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -45,91 +46,81 @@ export default function CheckoutPage() {
   // .map() transforma cada producto en una línea de texto "- 2x Cerveza ($100)".
   // .join("\n") une todas esas líneas con un salto de línea.
   // DOCS: Array.prototype.join() - https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/join
-  const message = `Hola! Quiero Pedir: \n${items
-    .map((i) => `- ${i.quantity}x ${i.name} ($${i.price * i.quantity})`)
-    .join("\n")}\n\n*Total: ${siteConfig.currency}${total()}*`;
-
-  // Construimos la URL. encodeURIComponent convierte espacios y enters en códigos seguros para URL (%20, etc).
-  // DOCS: encodeURIComponent - https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+  const message = `Hola! Quiero confirmar mi pedido: \n${items.map((i) => `- ${i.quantity}x ${i.name} ($${i.price * i.quantity})`).join("\n")}\n\n*Total Final: ${siteConfig.currency}${total()}*`;
   const whatsappUrl = `https://wa.me/${siteConfig.whatsappPhone}?text=${encodeURIComponent(message)}`;
 
   return (
-    <main className="min-h-screen bg-slate-950 p-4 md:p-8 pb-32">
-      <div className="max-w-2xl mx-auto">
+    // 'bg-base-200' es un gris muy suave, ideal para fondos de aplicación
+    <main className="min-h-screen bg-base-200 p-4 md:p-8 pb-32">
+      <div className="max-w-3xl mx-auto">
         
-        {/* ENCABEZADO CON NAVEGACIÓN */}
-        <div className="flex items-center gap-4 mb-8">
-          <Link href="/" className="text-gray-400 hover:text-white transition">
-            ← Volver
+        {/* Header con botón de volver */}
+        <div className="flex items-center gap-4 mb-6">
+          {/* 'btn-circle' + 'btn-ghost' crea un botón redondo transparente */}
+          <Link href="/" className="btn btn-circle btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
           </Link>
-          <h1 className="text-3xl font-bold text-yellow-500">Resumen del Pedido</h1>
+          <h1 className="text-3xl font-bold">Resumen del Pedido</h1>
         </div>
 
-        {/* LISTA DE PRODUCTOS (Iteramos sobre los items) */}
-        <div className="bg-slate-900 rounded-lg p-6 shadow-xl border border-slate-800 space-y-6">
-          {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-4 border-b border-slate-800 pb-6 last:border-0 last:pb-0">
-              
-              {/* IMAGEN DEL PRODUCTO */}
-              <div className="w-16 h-16 rounded overflow-hidden bg-slate-800 flex-shrink-0">
-                <img 
-                  // Usamos un "Placeholder" si la imagen viene vacía de la base de datos
-                  src={item.image_url || "https://placehold.co/400x300"} 
-                  alt={item.name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        {/* DAISYUI: Tabla Contenedora */}
+        {/* 'overflow-x-auto' permite scroll horizontal en móviles si la tabla es muy ancha */}
+        <div className="overflow-x-auto bg-base-100 rounded-box shadow-xl border border-base-300">
+          <table className="table">
+            <tbody>
+              {items.map((item) => (
+                <tr key={item.id} className="border-b border-base-200">
+                  
+                  {/* Columna 1: Imagen con Máscara */}
+                  <td>
+                    <div className="avatar">
+                      {/* 'mask mask-squircle' le da esa forma entre cuadrada y redonda moderna (tipo iOS) */}
+                      <div className="mask mask-squircle w-12 h-12">
+                        <img src={item.image_url || siteConfig.placeholderImage} alt={item.name} />
+                      </div>
+                    </div>
+                  </td>
+                  
+                  {/* Columna 2: Nombre y Precio Unitario */}
+                  <td className="w-full">
+                    <div className="font-bold">{item.name}</div>
+                    <div className="text-sm opacity-50">{siteConfig.currency}{item.price} c/u</div>
+                  </td>
 
-              {/* INFORMACIÓN DEL ITEM */}
-              <div className="flex-grow">
-                <h3 className="text-white font-bold">{item.name}</h3>
-                <p className="text-gray-400 text-sm">
-                  {siteConfig.currency}{item.price} x unidad
-                </p>
-              </div>
+                  {/* Columna 3: Controles de Cantidad */}
+                  <td>
+                    <div className="join border border-base-300">
+                      <button onClick={() => removeItem(item.id)} className="btn btn-ghost btn-error btn-md join-item font-bold text-lg shadow-none">-</button>
+                      <span className="join-item px-3 flex items-center font-bold text-base-content select-none">{item.quantity}</span>
+                      <button onClick={() => addItem(item)} className="btn btn-ghost btn-warning btn-md join-item font-bold text-lg shadow-none">+</button>
+                    </div>
+                  </td>
 
-              {/* CONTROLES DE CANTIDAD (Reutilizamos la lógica del Store) */}
-              <div className="flex items-center gap-3 bg-slate-800 rounded-full px-2 py-1 border border-slate-700">
-                {/* Botón Restar */}
-                <button
-                  onClick={() => removeItem(item.id)} // Llama a la lógica de Zustand
-                  className="w-8 h-8 flex items-center justify-center bg-slate-700 text-white rounded-full hover:bg-red-500 transition font-bold"
-                >
-                  -
-                </button>
-                
-                {/* Cantidad Actual */}
-                <span className="text-white font-bold w-6 text-center">{item.quantity}</span>
-                
-                {/* Botón Sumar */}
-                <button
-                  onClick={() => addItem(item)} // Llama a la lógica de Zustand
-                  className="w-8 h-8 flex items-center justify-center bg-yellow-500 text-black rounded-full hover:bg-yellow-400 transition font-bold"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          ))}
-
-          {/* TOTAL FINAL */}
-          <div className="pt-4 flex justify-between items-center text-xl">
-            <span className="text-gray-400">Total a pagar:</span>
-            <span className="text-green-400 font-bold text-2xl">
-              {siteConfig.currency}{total()}
-            </span>
+                  {/* Columna 4: Subtotal del Item */}
+                  <th className="text-right whitespace-nowrap">
+                    {siteConfig.currency}{item.price * item.quantity}
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          
+          {/* Footer Personalizado de la Tabla (Total General) */}
+          <div className="p-5 bg-base-200 flex justify-between items-center border-t border-base-300">
+            <span className="font-bold text-lg">Total a Pagar</span>
+            <span className="font-extrabold text-2xl text-success">{siteConfig.currency}{total()}</span>
           </div>
         </div>
 
-        {/* BOTÓN FINAL DE CONFIRMACIÓN (Link externo a WhatsApp) */}
+        {/* Botón Final */}
+        {/* 'btn-block' hace que ocupe todo el ancho. 'btn-lg' lo hace grande y fácil de tocar. */}
         <a
           href={whatsappUrl}
-          target="_blank" // Abre en pestaña nueva
+          target="_blank"
           rel="noopener noreferrer" // DOCS: Seguridad para links externos (evita ataques de phishing)
-                                    // https://web.dev/articles/external-anchors-use-rel-noopener
-          className="mt-8 w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl text-center block text-lg shadow-lg hover:scale-[1.02] transition-transform"
+          className="btn btn-success btn-block btn-lg mt-8 text-white shadow-lg transform active:scale-95 transition-transform"
         >
-          Enviar Pedido a WhatsApp 📲
+          Confirmar Pedido en WhatsApp 📲
         </a>
       </div>
     </main>

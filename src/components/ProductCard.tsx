@@ -1,83 +1,96 @@
-"use client"; // Obligatorio porque tiene interactividad (botones)
+"use client";
 
-import { Product } from "@/types"; // Revisa que la ruta sea correcta según tu proyecto
+import { Product } from "@/types";
 import { useCartStore } from "@/store/cart";
+import { siteConfig } from "@/config/site";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
-  // DOCS: Zustand - Using the store
-  // Extraemos las funciones y la lista de items del cerebro
+  // Conectamos con el estado global (Zustand)
   const { addItem, removeItem, items } = useCartStore();
-
-  // Buscamos si ESTE producto específico ya está en el carrito
+  
+  // Buscamos si este producto ya está en el carrito para saber su cantidad
   const cartItem = items.find((item) => item.id === product.id);
-  // Si existe, guardamos su cantidad. Si no, es 0.
+    // Si existe, guardamos su cantidad. Si no, es 0.
   const quantity = cartItem ? cartItem.quantity : 0;
 
   return (
-    <div className="bg-slate-900 rounded-lg overflow-hidden shadow-lg border border-slate-800 flex flex-col transition-transform hover:scale-[1.02] duration-300">
+    // DAISYUI: 'card' crea el contenedor con bordes y sombras automáticas.
+    // 'bg-base-100' usa el color de fondo base del tema (blanco o negro según modo).
+    // 'hover:scale-[1.02]' es Tailwind puro para la animación al pasar el mouse.
+    <div className="card bg-base-100 border border-base-300 hover:scale-[1.02] transition-transform duration-300">
       
       {/* SECCIÓN IMAGEN */}
-      <div className="relative h-48 w-full bg-slate-800">
+      {/* DAISYUI: 'figure' es requerido por DaisyUI para la zona de la imagen */}
+      <figure className="relative h-48 w-full">
         <img
-          src={product.image_url || "https://placehold.co/400x300?text=Sin+Imagen"}
+          src={product.image_url || siteConfig.placeholderImage}
           alt={product.name}
           className="w-full h-full object-cover"
         />
         {/* Etiqueta de Categoría (Genérica) */}
-        <span className="absolute top-2 right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow">
+        {/* DAISYUI: 'badge' crea la etiqueta redondeada. 'badge-secondary' le da el color rosado/secundario del tema. */}
+        <div className="badge absolute top-2 right-2 font-bold">
           {product.categories?.name || "Sin Categoria"}
-        </span>
-      </div>
+        </div>
+      </figure>
 
       {/* SECCIÓN INFO */}
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-xl font-bold text-white mb-1">{product.name}</h3>
+      {/* DAISYUI: 'card-body' aplica el padding correcto automáticamente */}
+      <div className="card-body p-4 flex flex-col">
+        {/* 'card-title' asegura el tamaño y peso de fuente correcto */}
+        <h2 className="card-title text-base-content">{product.name}</h2>
         
-        <p className="text-gray-400 text-sm mb-4 flex-grow line-clamp-2">
-          {product.description || "Descripción no disponible."}
+        {/* 'line-clamp-2' corta el texto si es muy largo (Tailwind Line Clamp plugin) */}
+        <p className="text-sm text-base-content/70 line-clamp-2 flex-grow">
+          {product.description || "Sin descripción disponible."}
         </p>
         
         {/* PRECIO Y BOTONES */}
-        <div className="flex justify-between items-center mt-auto pt-4 border-t border-slate-800">
-          <span className="text-xl font-bold text-green-400">
-            ${product.price}
+        {/* DAISYUI: 'card-actions' posiciona los botones al final */}
+        <div className="card-actions justify-between items-center mt-4 pt-4 border-t border-base-200">
+          {/* 'text-success' usa el color verde semántico del tema */}
+          <span className="text-2xl font-bold text-success">
+            {siteConfig.currency}{product.price}
           </span>
 
           {/* RENDERIZADO CONDICIONAL: ¿Botón simple o Controles? */}
           {quantity === 0 ? (
+            // DAISYUI: 'btn btn-primary' crea un botón con el color principal.
+            // 'btn-sm' lo hace pequeño. 'rounded-full' lo hace redondo.
+
             // Opción A: No está en el carrito -> Botón "Agregar"
             <button
               onClick={() => addItem(product)}
-              className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-6 rounded-full transition-colors shadow-md"
+              className="btn btn-active btn-warning btn-md px-8"
             >
               Agregar
             </button>
           ) : (
+            // DAISYUI: 'join' agrupa botones pegados (como un grupo de inputs).
+
             // Opción B: Ya está en el carrito -> Botones [- 1 +]
-            <div className="flex items-center gap-3 bg-slate-800 rounded-full px-2 py-1 border border-slate-700 shadow-inner">
-              {/* Botón Restar */}
+            <div className="join border border-base-300">
               <button
                 onClick={() => removeItem(product.id)}
-                className="w-8 h-8 flex items-center justify-center bg-slate-700 text-white rounded-full hover:bg-red-500 hover:text-white transition-colors font-bold"
-                aria-label="Restar unidad"
+                // 'btn-ghost' quita el fondo (transparente). 'text-error' lo pone rojo.
+                className="btn btn-ghost btn-error btn-md join-item font-bold text-lg shadow-none"
               >
                 -
               </button>
               
               {/* Contador Central */}
-              <span className="text-white font-bold w-6 text-center select-none">
+              <span className="join-item px-3 flex items-center font-bold text-base-content select-none">
                 {quantity}
               </span>
 
               {/* Botón Sumar */}
               <button
                 onClick={() => addItem(product)}
-                className="w-8 h-8 flex items-center justify-center bg-yellow-500 text-black rounded-full hover:bg-yellow-400 transition-colors font-bold"
-                aria-label="Sumar unidad"
+                className="btn btn-ghost btn-warning btn-md join-item font-bold text-lg shadow-none"
               >
                 +
               </button>

@@ -1,13 +1,11 @@
-"use client"; // Indica que este componente corre en el navegador (Client Component)
+"use client";
 
-// Importamos los hooks necesarios de Next.js y React
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function SearchBar() {
   // Inicializamos el enrutador para poder cambiar la URL
   const router = useRouter();
-  
   // Obtenemos los parámetros actuales de la URL (para leer ?q=...)
   const searchParams = useSearchParams();
 
@@ -15,27 +13,22 @@ export default function SearchBar() {
   // Guardamos lo que el usuario escribe. Si ya hay algo en la URL, lo usamos como valor inicial.
   const [term, setTerm] = useState(searchParams.get("q") || "");
 
-  // 2. EFECTO "DEBOUNCE" (La espera inteligente)
-  //  DOCS React: Synchronizing with Effects
-  // https://react.dev/learn/synchronizing-with-effects
+  // EFECTO DEBOUNCE
+  // Explicación: No queremos recargar la página por cada letra. Esperamos 500ms.
+  // Docs useEffect: https://react.dev/reference/react/useEffect
+  // Docs setTimeout: https://developer.mozilla.org/es/docs/Web/API/setTimeout
   useEffect(() => {
     // Creamos un temporizador (timer) que esperará 500ms
     const timer = setTimeout(() => {
-      // Esta lógica se ejecuta SOLO si pasaron 500ms sin que el usuario escriba
-      if (term) {
-        // Si hay texto, actualizamos la URL con ?q=texto
-        router.push(`/?q=${term}`);
-      } else {
-        // Si el usuario borró todo, volvemos a la raiz (/)
-        router.push("/");
-      }
-    }, 500); // Tiempo de espera: medio segundo
+      // Si hay texto, actualizamos la URL con ?q=texto
+      if (term) router.push(`/?q=${term}`);
+      // Si el usuario borró todo, volvemos a la raiz (/)
+      else router.push("/");
+    }, 500);// Tiempo de espera: medio segundo
 
     //  FUNCION DE LIMPIEZA (CLEANUP)
     // Si el usuario escribe otra letra ANTES de los 500ms, React ejecuta esto primero
-    return () => {
-      clearTimeout(timer); // Cancelamos el timer anterior para que no se ejecute
-    };
+    return () => clearTimeout(timer);
   }, [term, router]); // Este efecto se reinicia cada vez que cambia 'term' (lo que escribes)
 
   // 3. FUNCIÓN PARA BORRAR (La "X")
@@ -45,44 +38,32 @@ export default function SearchBar() {
   };
 
   return (
-    // Usamos 'relative' para poder posicionar la X adentro
-    <div className="relative mb-8 max-w-full">
-      
-      {/* EL INPUT DE TEXTO */}
-      <input
-        type="text"
-        placeholder="Buscar Producto..."
-        // Clases de Tailwind:
-        // pr-10: Padding a la derecha para que el texto no se monte sobre la X
-        className="w-full p-3 pr-10 rounded bg-slate-800 text-white border border-slate-700 focus:border-yellow-500 outline-none transition-colors"
+    <div className="form-control w-full max-w-lg mb-8 mx-auto">
+      {/* DAISYUI: 'input input-bordered' crea el input con borde estándar.
+         'flex items-center gap-2' nos permite poner el ícono adentro visualmente.
+      */}
+      <label className="input input-bordered input-lg w-full max-w-lg mx-auto">  
         
-        // Conectamos el input con el estado
-        value={term}
-        // Cada vez que escribes, actualizamos el estado 'term' (y esto dispara el useEffect arriba)
-        onChange={(e) => setTerm(e.target.value)}
-      />
+        {/* SVG de Lupa (Iconografía estándar) */}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
+        
+        {/* EL INPUT DE TEXTO */} 
+        <input
+          type="text"
+          className="grow" // Ocupa todo el espacio disponible
+          placeholder="Buscar Producto..."
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+        />
 
-      {/* EL BOTÓN "X" PARA BORRAR */}
-      {/* Solo mostramos la X si hay algo escrito (term existe) */}
-      {term && (
-        <button
-          onClick={clearSearch} // Al hacer clic, ejecuta la limpieza
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-          aria-label="Borrar búsqueda"
-        >
-          {/* Ícono de X simple (SVG) */}
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            strokeWidth={2} 
-            stroke="currentColor" 
-            className="w-5 h-5"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      )}
+        {/* Botón de limpiar (Solo aparece si hay texto) */}
+        {term && (
+          // DAISYUI: 'btn-circle' hace un botón perfectamente redondo.
+          <button onClick={clearSearch} className="btn btn-circle btn-ghost btn-xs text-base-content/50 hover:text-error">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        )}
+      </label>
     </div>
   );
 }

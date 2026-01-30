@@ -23,12 +23,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* El contenido de la página principal */}
-        <main>
-          {children}
-        </main>
+    <html lang="es" data-theme="dark"> 
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-base-200`}>
+        {/* El contenido */}
+        {children}
 
         {/* El Footer global */}
         {/* <footer style={{ textAlign: 'center', padding: '20px', borderTop: '1px solid #ccc' }}>
@@ -38,3 +36,4 @@ export default function RootLayout({
     </html>
   );
 }
+ 
