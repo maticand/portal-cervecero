@@ -64,7 +64,7 @@ export default function CheckoutPage() {
               <h3 className="font-bold text-sm sm:text-base leading-tight break-words">
                 {item.name}
               </h3>
-              <p className="text-xs opacity-70 mt-1">{siteConfig.currency}{item.price} unit.</p>
+              <p className="text-xs opacity-70 mt-1">{siteConfig.currency}{item.price} c/u</p>
             </div>
 
             {/* 3. ACCIONES (Derecha) */}
@@ -80,10 +80,8 @@ export default function CheckoutPage() {
                 <button 
                   onClick={() => removeItem(item.id)} 
                   // Botones un poco más compactos
-                  className="btn btn-xs sm:btn-sm btn-ghost join-item text-error hover:bg-base-200 px-1"
-                >
-                  -
-                </button>
+                  className="btn btn-xs sm:btn-sm btn-ghost join-item text-error hover:bg-base-200 px-3"
+                > - </button>
                 
                 <span className="join-item flex items-center px-2 text-xs sm:text-sm font-bold bg-base-100 tabular-nums">
                   {item.quantity}
@@ -91,10 +89,8 @@ export default function CheckoutPage() {
 
                 <button 
                   onClick={() => addItem(item)} 
-                  className="btn btn-xs sm:btn-sm btn-ghost join-item text-success hover:bg-base-200 px-1"
-                >
-                  +
-                </button>
+                  className="btn btn-xs sm:btn-sm btn-ghost join-item text-success hover:bg-base-200 px-3"
+                > + </button>
               </div>
 
             </div>
