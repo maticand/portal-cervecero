@@ -90,9 +90,13 @@ export default function CheckoutPage() {
                   {/* Columna 3: Controles de Cantidad */}
                   <td>
                     <div className="join border border-base-300">
-                      <button onClick={() => removeItem(item.id)} className="btn btn-ghost btn-error btn-md join-item font-bold text-lg shadow-none">-</button>
-                      <span className="join-item px-3 flex items-center font-bold text-base-content select-none">{item.quantity}</span>
-                      <button onClick={() => addItem(item)} className="btn btn-ghost btn-warning btn-md join-item font-bold text-lg shadow-none">+</button>
+                      <button onClick={() => removeItem(item.id)} 
+                      className="btn btn-ghost btn-error btn-sm join-item font-bold text-lg shadow-none"> - </button>
+
+                      <span className="join-item px-1 flex items-center font-bold text-base-content select-none">{item.quantity}</span>
+
+                      <button onClick={() => addItem(item)} 
+                      className="btn btn-ghost btn-warning btn-sm join-item font-bold text-lg shadow-none"> + </button>
                     </div>
                   </td>
 
