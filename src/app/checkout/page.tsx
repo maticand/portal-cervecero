@@ -1,35 +1,54 @@
-"use client";
+"use client"; // DOCS: Indica que este componente usa interactividad (hooks) en el navegador.
+// https://nextjs.org/docs/app/building-your-application/rendering/client-components
 
-import { useCartStore } from "@/store/cart";
-import { siteConfig } from "@/config/site";
-import Link from "next/link";
+import { useCartStore } from "@/store/cart"; // Importamos nuestro estado global (el cerebro)
+import { siteConfig } from "@/config/site";  // Importamos la configuración del sitio (moneda, teléfono)
+import Link from "next/link";                // DOCS: Componente optimizado para navegar entre páginas sin recargar.
+                                             // https://nextjs.org/docs/app/api-reference/components/link
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // DOCS: Hook para redirigir al usuario programáticamente.
+                                             // https://nextjs.org/docs/app/api-reference/functions/use-router
 
 export default function CheckoutPage() {
+  // 1. CONEXIÓN CON ZUSTAND
+  // Extraemos los datos y funciones que necesitamos del store.
   const { items, addItem, removeItem, total } = useCartStore();
+  
+  // 2. SOLUCIÓN AL PROBLEMA DE HIDRATACIÓN
+  // Next.js renderiza en el servidor, pero el carrito vive en el navegador (LocalStorage).
+  // Esperamos a que el componente se "monte" en el navegador para mostrar datos.
+  // DOCS: React useEffect - https://react.dev/reference/react/useEffect
   const [isMounted, setIsMounted] = useState(false);
-
   useEffect(() => setIsMounted(true), []);
 
+  // Si no está montado, devolvemos null para evitar errores visuales rápidos.
   if (!isMounted) return null;
 
-  // ESTADO VACÍO
+  // 3. VALIDACIÓN DE CARRITO VACÍO
+  // Si el usuario entra aquí directamente sin productos, lo mandamos al inicio.
   if (items.length === 0) {
     return (
-      <div className="hero min-h-[60vh]">
+      // DAISYUI: Componente 'Hero' para pantallas completas de aviso
+      <div className="hero min-h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <h1 className="text-3xl font-bold">Carrito Vacío 🛒</h1>
-            <p className="py-6 text-base-content/70">No tienes productos seleccionados.</p>
-            <Link href="/" className="btn btn-primary rounded-full px-8">Volver al Catálogo</Link>
+            <h1 className="text-3xl font-bold">🛒 Carrito Vacío</h1>
+            <p className="py-6">Parece que aún no has elegido nada.</p>
+            <Link href="/" className="btn btn-primary">Volver al Catálogo</Link>
           </div>
         </div>
       </div>
     );
   }
 
-  const message = `Hola! Pedido: \n${items.map(i => `${i.quantity}x ${i.name}`).join("\n")}\nTotal: ${total()}`;
+  // 4. GENERACIÓN DEL MENSAJE DE WHATSAPP
+  // Creamos un string de texto con el resumen.
+  // .map() transforma cada producto en una línea de texto "- 2x Cerveza ($100)".
+  // .join("\n") une todas esas líneas con un salto de línea.
+  // DOCS: Array.prototype.join() - https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+  const message = `Hola! Quiero confirmar mi pedido: \n${items.map((i) => `- ${i.quantity}x ${i.name} ($${i.price * i.quantity})`).join("\n")}\n\n*Total Final: ${siteConfig.currency}${total()}*`;
   const whatsappUrl = `https://wa.me/${siteConfig.whatsappPhone}?text=${encodeURIComponent(message)}`;
+
 
   return (
     <div className="container mx-auto p-3 max-w-2xl pb-32"> 
