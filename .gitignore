@@ -44,4 +44,4 @@ next-env.d.ts
 .netlify
 
 # Ignore site configuration file
-src/config/site.ts
+/config/site.ts

@@ -49,7 +49,6 @@ export default function CheckoutPage() {
   const message = `Hola! Quiero confirmar mi pedido: \n${items.map((i) => `- ${i.quantity}x ${i.name} ($${i.price * i.quantity})`).join("\n")}\n\n*Total Final: ${siteConfig.currency}${total()}*`;
   const whatsappUrl = `https://wa.me/${siteConfig.whatsappPhone}?text=${encodeURIComponent(message)}`;
 
-
   return (
     <div className="container mx-auto p-3 max-w-2xl pb-32"> 
       
